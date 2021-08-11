@@ -1,4 +1,4 @@
-﻿#include "server.h"
+#include "server.h"
 #include <arpa/inet.h>
 #include <iostream>
 #include <stdexcept>
@@ -98,8 +98,8 @@ server::add_epoll(int fd, uint32_t events)
   epoll_event event = {};
   event.events = events;
   event.data.fd = fd;
-  , if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event) ==
-        -1) throw std::runtime_error("failed to create epoll_ctl");
+  if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event) == -1)
+    throw std::runtime_error("failed to create epoll_ctl");
 }
 
 void
@@ -107,7 +107,7 @@ server::handle_client(int fd, uint32_t events_sent)
 {
 
   if (sockets.contains(fd)) {
-    auto sock = sockets.at(fd);
+    auto& sock = sockets.at(fd);
     uint32_t err = EPOLLERR | EPOLLHUP;
     if (events_sent & err) {
       close(fd);
@@ -116,5 +116,11 @@ server::handle_client(int fd, uint32_t events_sent)
       return;
     }
     sock.read_data();
+    if (sock.repsone_ready) {
+      send(fd, sock.response_header.data(), sock.response_header.size(), 0);
+      send(fd, sock.response_body.data(), sock.response_body.size(), 0);
+      close(fd);
+      sockets.erase(fd);
+    }
   }
 }
