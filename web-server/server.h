@@ -4,6 +4,8 @@
 #include "socket_req.h"
 #include <map>
 #include <netinet/in.h>
+#include <openssl/ssl.h>
+#include <openssl/tls1.h>
 #include <string>
 #include <sys/epoll.h>
 #include <sys/socket.h>
@@ -28,10 +30,10 @@ public:
   void accept_incoming();
   void new_client(int fd);
 
-  void read_all();
-
   void add_epoll(int fd, uint32_t events);
   void handle_client(int fd, uint32_t events_sent);
+
+  // SSL
 };
 
 #endif // SERVER_H

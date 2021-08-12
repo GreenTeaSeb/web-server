@@ -85,14 +85,6 @@ server::new_client(int fd)
 }
 
 void
-server::read_all()
-{
-  for (auto& sock : sockets) {
-    // sock.read_data();
-  }
-}
-
-void
 server::add_epoll(int fd, uint32_t events)
 {
   epoll_event event = {};

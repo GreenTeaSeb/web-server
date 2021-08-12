@@ -11,7 +11,7 @@ void
 socket_req::read_data()
 {
   char buffer[512];
-  auto len = recv(socketFD, buffer, sizeof(buffer), MSG_DONTWAIT);
+  auto len = recv(socketFD, buffer, sizeof(buffer), 0);
   if (len > 0) {
 
     line.append(buffer, len);
@@ -40,6 +40,7 @@ socket_req::parse_header()
     line.erase(0, sub.length() + delim.length());
   }
 
+  response_header.append("Connection: close\nServer: Sveb's server\n");
   response_header.append("\n\n");
   repsone_ready = true;
 }
@@ -80,6 +81,7 @@ socket_req::get_file_data(std::string path)
 
     std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
                               std::istreambuf_iterator<char>());
+    response_header.append("200 OK\n");
     return data;
   } else {
     response_header.append("404\n");
