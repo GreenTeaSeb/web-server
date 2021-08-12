@@ -62,29 +62,20 @@ std::vector<uint8_t>
 socket_req::get_file_data(std::string path)
 {
   printf("checking path: %s \n", path.c_str());
-  if (std::filesystem::exists(path) && path.find("..") == std::string::npos) {
-
-    if (std::filesystem::is_directory(path)) {
-      if (std::filesystem::exists(path))
-        path.append("/index.html");
-      else {
-        // todo
-        std::string result = {};
-        for (auto const& entry : std::filesystem::directory_iterator(path)) {
-          result.append(entry.path().generic_string());
-          result.push_back('\n');
-        }
-        return { result.begin(), result.end() };
-      }
-    }
-    std::ifstream file(path, std::ios::in | std::ios::binary);
-
-    std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
-                              std::istreambuf_iterator<char>());
-    response_header.append("200 OK\n");
-    return data;
+  if (std::filesystem::is_directory(path) &&
+      path.find("..") == std::string::npos) {
+    return get_file_data(path + "/index.html");
   } else {
-    response_header.append("404\n");
-    return {};
+    if (std::filesystem::exists(path)) {
+      std::ifstream file(path, std::ios::in | std::ios::binary);
+
+      std::vector<uint8_t> data((std::istreambuf_iterator<char>(file)),
+                                std::istreambuf_iterator<char>());
+      response_header.append("200 OK\n");
+      return data;
+    }
+    response_header.append("404 Not Found\n");
+    std::string res = "not foundy sorry -eh";
+    return { res.begin(), res.end() };
   }
 }
