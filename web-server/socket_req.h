@@ -23,6 +23,7 @@ public:
 private:
   void parse_header();
   void parse_line(std::string line);
+  std::string url_decode(std::string line);
   std::vector<uint8_t> get_file_data(std::string path);
 };
 
