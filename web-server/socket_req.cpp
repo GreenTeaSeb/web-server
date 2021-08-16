@@ -17,9 +17,6 @@ socket_req::read_data()
     line.append(buffer, len);
     if (line.ends_with("\r\n\r\n") || line.ends_with("\n\n"))
       parse_header();
-
-  } else {
-    close(socketFD);
   }
 }
 

@@ -111,8 +111,9 @@ server::handle_client(int fd, uint32_t events_sent)
     if (sock.repsone_ready) {
       send(fd, sock.response_header.data(), sock.response_header.size(), 0);
       send(fd, sock.response_body.data(), sock.response_body.size(), 0);
-      close(fd);
-      sockets.erase(fd);
     }
+    epoll_ctl(epoll_fd, EPOLL_CTL_DEL, fd, NULL);
+    close(fd);
+    sockets.erase(fd);
   }
 }
