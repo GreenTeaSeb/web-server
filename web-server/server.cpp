@@ -81,7 +81,8 @@ server::new_client(int fd)
   sock.port = reinterpret_cast<sockaddr_in*>(&addr)->sin_port;
   sock.ip = inet_ntoa(reinterpret_cast<sockaddr_in*>(&addr)->sin_addr);
   sockets.insert({ client_fd, sock });
-  printf("%d | %s:%d connected\n", sockets.size(), sock.ip.c_str(), sock.port);
+  // printf("%d | %s:%d connected\n", sockets.size(), sock.ip.c_str(),
+  // sock.port);
 }
 
 void

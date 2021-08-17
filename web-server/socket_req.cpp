@@ -68,7 +68,7 @@ socket_req::parse_line(std::string line)
 
     if (key == "GET") {
       std::string path = "." + value.substr(0, value.find_last_of(" "));
-      printf("requested path: %s\n", path.c_str());
+      // printf("requested path: %s\n", path.c_str());
       response_body = get_file_data(path);
     }
   }
@@ -77,7 +77,7 @@ socket_req::parse_line(std::string line)
 std::vector<uint8_t>
 socket_req::get_file_data(std::string path)
 {
-  printf("checking path: %s \n", path.c_str());
+  // printf("checking path: %s \n", path.c_str());
   if (std::filesystem::is_directory(path) &&
       path.find("..") == std::string::npos) {
 
